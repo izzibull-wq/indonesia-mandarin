@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Translate Indonesia - Mandarin</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',system-ui,-apple-system,sans-serif}
+  body{background:#FFF7ED;min-height:100vh;padding:16px;display:flex;justify-content:center;align-items:flex-start}
+  .wrap{width:100%;max-width:680px}
+  .header{text-align:center;margin:18px 0 16px}
+  .header h1{font-size:28px;line-height:1.2;color:#1F2937}
+  .header h1 span{color:#EA580C}
+  .header p{color:#6B7280;font-size:14px;margin-top:6px}
+  .card{background:#fff;border:1px solid #FED7AA;border-radius:20px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,.06)}
+  .lang-bar{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:#FFFBEB;border-bottom:1px solid #FDE68A}
+  .lang{font-weight:700;font-size:15px;color:#111827;display:flex;align-items:center;gap:8px}
+  .flag{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font-size:18px;background:#fff;border:1px solid #E5E7EB}
+  .swap{width:40px;height:40px;border-radius:50%;border:1px solid #FDBA74;background:#fff;cursor:pointer;font-size:18px}
+  .swap:active{transform:scale(.95)}
+  .box{padding:16px}
+  label{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#9CA3AF;font-weight:700}
+  textarea{width:100%;border:1.5px solid #E5E7EB;border-radius:14px;padding:14px;font-size:17px;line-height:1.5;outline:none;resize:vertical;min-height:110px;margin-top:8px}
+  textarea:focus{border-color:#FB923C;box-shadow:0 0 0 3px #FFEDD5}
+  .count{text-align:right;font-size:12px;color:#9CA3AF;margin-top:6px}
+  .result{margin-top:4px;background:#FFFBEB;border:1px dashed #FDBA74;border-radius:14px;padding:16px;min-height:110px}
+  .result-text{font-size:26px;line-height:1.4;color:#111827;word-break:break-word}
+  .result-empty{color:#9CA3AF;font-size:15px}
+  .pinyin-box{margin-top:10px;background:#EFF6FF;border:1px solid #BFDBFE;border-radius:14px;padding:14px}
+  .pinyin-text{font-size:17px;line-height:1.6;color:#1E40AF;margin-top:6px;word-break:break-word;font-style:italic}
+  .pinyin-actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+  .mini-btn{border:1px solid #BFDBFE;background:#fff;color:#1E40AF;border-radius:999px;padding:7px 12px;font-size:12px;font-weight:700;cursor:pointer}
+  .mini-btn.active{background:#1E40AF;color:#fff;border-color:#1E40AF}
+  .actions{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
+  .btn{flex:1;min-width:120px;border:none;border-radius:12px;padding:13px 16px;font-size:15px;font-weight:700;cursor:pointer}
+  .btn-primary{background:#EA580C;color:#fff}
+  .btn-primary:hover{background:#C2410C}
+  .btn-ghost{background:#F3F4F6;color:#374151}
+  .btn-ghost:hover{background:#E5E7EB}
+  .btn:disabled{opacity:.6;cursor:not-allowed}
+  .row{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+  .chip{border:1px solid #E5E7EB;background:#fff;border-radius:999px;padding:8px 12px;font-size:13px;cursor:pointer}
+  .chip:hover{border-color:#FB923C;background:#FFFBEB}
+  .section-title{font-size:13px;font-weight:700;color:#374151;margin:16px 0 8px}
+  .footer{text-align:center;color:#9CA3AF;font-size:12px;margin:14px 0;line-height:1.5}
+  .status{font-size:12px;color:#EA580C;margin-top:8px;min-height:16px}
+  @media(max-width:480px){.header h1{font-size:24px}.result-text{font-size:22px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="header">
+    <h1>Indonesia <span>↔</span> Mandarin</h1>
+    <p>Translator simple, ketik lalu otomatis diterjemahkan.</p>
+  </div>
+  <div class="card">
+    <div class="lang-bar">
+      <div class="lang"><span class="flag">🇮🇩</span><span id="fromLabel">Indonesia</span></div>
+      <button class="swap" id="swapBtn" title="Tukar bahasa">⇄</button>
+      <div class="lang"><span id="toLabel">Mandarin</span><span class="flag">🇨🇳</span></div>
+    </div>
+    <div class="box">
+      <label id="inputLabel" for="inputText">Bahasa Indonesia</label>
+      <textarea id="inputText" placeholder="Ketik di sini... contoh: Selamat pagi, apa kabar?"></textarea>
+      <div class="count"><span id="charCount">0</span> karakter</div>
+      <div class="actions">
+        <button class="btn btn-primary" id="translateBtn">Terjemahkan →</button>
+        <button class="btn btn-ghost" id="speakBtn">🔊 Dengarkan</button>
+      </div>
+      <div class="status" id="status"></div>
+      <label style="margin-top:10px;display:block">Hasil Mandarin</label>
+      <div class="result">
+        <div class="result-text" id="outputText"><span class="result-empty">Hasil terjemahan akan muncul di sini...</span></div>
+      </div>
+      <div class="pinyin-box">
+        <label>Pinyin — Cara Baca</label>
+        <div class="pinyin-text" id="pinyinText">Pinyin akan muncul di sini...</div>
+        <div class="pinyin-actions">
+          <button class="mini-btn active" id="toneMarkBtn">Dengan Nada: zǎo</button>
+          <button class="mini-btn" id="toneNoneBtn">Tanpa Nada: zao</button>
+          <button class="mini-btn" id="copyPinyinBtn">📋 Salin Pinyin</button>
+        </div>
+      </div>
+      <div class="actions">
+        <button class="btn btn-ghost" id="copyBtn">📋 Salin Hasil</button>
+        <button class="btn btn-ghost" id="clearBtn">🗑️ Hapus</button>
+      </div>
+      <div class="section-title">Coba contoh cepat:</div>
+      <div class="row" id="examples"></div>
+    </div>
+  </div>
+  <p class="footer">Single file HTML • Bekerja online via MyMemory API gratis.<br>Tips: klik contoh untuk langsung menerjemahkan.</p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/pinyin-pro@3.19.0/dist/index.js"></script>
+<script>
+const inputEl = document.getElementById('inputText');
+const outputEl = document.getElementById('outputText');
+const statusEl = document.getElementById('status');
+const charCountEl = document.getElementById('charCount');
+const translateBtn = document.getElementById('translateBtn');
+const fromLabel = document.getElementById('fromLabel');
+const toLabel = document.getElementById('toLabel');
+const inputLabel = document.getElementById('inputLabel');
+let fromLang = 'id';
+let toLang = 'zh-CN';
+let timer = null;
+let toneMode = 'mark';
+let lastChineseText = '';
+const pinyinEl = document.getElementById('pinyinText');
+const pinyinDict = {
+  '早上好': 'zǎo shang hǎo',
+  '非常感谢': 'fēi cháng gǎn xiè',
+  '谢谢': 'xiè xie',
+  '你好吗？': 'nǐ hǎo ma?',
+  '你好吗': 'nǐ hǎo ma',
+  '我喜欢印度尼西亚': 'wǒ xǐ huān yìn dù ní xī yà',
+  '厕所在哪里？': 'cè suǒ zài nǎ lǐ?',
+  '多少钱？': 'duō shǎo qián?',
+  '我想吃炒饭': 'wǒ xiǎng chī chǎo fàn',
+  '再见': 'zài jiàn'
+};
+function removeTone(str){
+  return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+}
+function getPinyin(chinese){
+  if(!chinese) return '';
+  if(pinyinDict[chinese]) {
+    return toneMode === 'mark' ? pinyinDict[chinese] : removeTone(pinyinDict[chinese]);
+  }
+  try{
+    if(window.pinyinPro && window.pinyinPro.pinyin){
+      const out = window.pinyinPro.pinyin(chinese, { toneType: toneMode === 'mark' ? 'symbol' : 'none', type: 'string', nonZh: 'consecutive' });
+      return out;
+    }
+    if(window.pinyin && typeof window.pinyin === 'function'){
+      return window.pinyin(chinese, { toneType: toneMode === 'mark' ? 'symbol' : 'none' });
+    }
+  }catch(e){}
+  return 'Pinyin belum tersedia untuk kalimat ini (cek internet)';
+}
+function updatePinyin(chinese){
+  lastChineseText = chinese || '';
+  if(!lastChineseText){ pinyinEl.textContent = 'Pinyin akan muncul di sini...'; return; }
+  if(!/[\u4e00-\u9fff]/.test(lastChineseText)){ pinyinEl.textContent = '—'; return; }
+  pinyinEl.textContent = getPinyin(lastChineseText);
+}
+const examples = ['Selamat pagi','Terima kasih banyak','Apa kabar?','Saya suka Indonesia','Di mana toilet?','Berapa harganya?','Saya mau makan nasi goreng','Sampai jumpa lagi'];
+const fallbackDict = {
+  'selamat pagi': '早上好',
+  'terima kasih banyak': '非常感谢',
+  'terima kasih': '谢谢',
+  'apa kabar?': '你好吗？',
+  'apa kabar': '你好吗',
+  'saya suka indonesia': '我喜欢印度尼西亚',
+  'di mana toilet?': '厕所在哪里？',
+  'berapa harganya?': '多少钱？',
+  'saya mau makan nasi goreng': '我想吃炒饭',
+  'sampai jumpa lagi': '再见'
+};
+const examplesWrap = document.getElementById('examples');
+examples.forEach(text => {
+  const b = document.createElement('button');
+  b.className = 'chip';
+  b.textContent = text;
+  b.onclick = () => { inputEl.value = text; updateCount(); translate(); inputEl.focus(); };
+  examplesWrap.appendChild(b);
+});
+function updateCount(){ charCountEl.textContent = inputEl.value.length; }
+function setLabels(){
+  if(fromLang === 'id'){
+    fromLabel.textContent = 'Indonesia';
+    toLabel.textContent = 'Mandarin';
+    inputLabel.textContent = 'Bahasa Indonesia';
+    inputEl.placeholder = 'Ketik di sini... contoh: Selamat pagi, apa kabar?';
+  } else {
+    fromLabel.textContent = 'Mandarin';
+    toLabel.textContent = 'Indonesia';
+    inputLabel.textContent = 'Bahasa Mandarin';
+    inputEl.placeholder = 'Di sini ketik Mandarin...';
+  }
+}
+async function translate(){
+  const text = inputEl.value.trim();
+  updateCount();
+  if(!text){
+    outputEl.innerHTML = '<span class="result-empty">Hasil terjemahan akan muncul di sini...</span>';
+    pinyinEl.textContent = 'Pinyin akan muncul di sini...';
+    lastChineseText = '';
+    statusEl.textContent = '';
+    return;
+  }
+  statusEl.textContent = 'Menerjemahkan...';
+  translateBtn.disabled = true;
+  translateBtn.textContent = 'Menerjemahkan...';
+  try {
+    const url = 'https://api.mymemory.translated.net/get?q=' + encodeURIComponent(text) + '&langpair=' + fromLang + '|' + toLang;
+    const res = await fetch(url);
+    const data = await res.json();
+    let result = data && data.responseData ? data.responseData.translatedText : '';
+    if(!result || result.toLowerCase() === text.toLowerCase()){
+      const key = text.toLowerCase();
+      if(fallbackDict[key]) result = fallbackDict[key];
+    }
+    outputEl.textContent = result || 'Gagal menerjemahkan, coba lagi.';
+    const chineseText = toLang === 'zh-CN' ? result : text;
+    updatePinyin(chineseText);
+    statusEl.textContent = 'Selesai ✓';
+  } catch(e){
+    const key = text.toLowerCase();
+    if(fallbackDict[key]){
+      outputEl.textContent = fallbackDict[key];
+      updatePinyin(toLang === 'zh-CN' ? fallbackDict[key] : text);
+      statusEl.textContent = 'Mode offline (kamus contoh)';
+    } else {
+      outputEl.textContent = 'Koneksi gagal. Cek internet lalu coba lagi.';
+      updatePinyin(toLang === 'zh-CN' ? '' : text);
+      statusEl.textContent = 'Gagal terhubung';
+    }
+  }
+  translateBtn.disabled = false;
+  translateBtn.textContent = 'Terjemahkan →';
+}
+inputEl.addEventListener('input', () => {
+  updateCount();
+  clearTimeout(timer);
+  timer = setTimeout(translate, 700);
+});
+translateBtn.addEventListener('click', translate);
+document.getElementById('swapBtn').addEventListener('click', () => {
+  const tempLang = fromLang; fromLang = toLang; toLang = tempLang;
+  const outText = outputEl.textContent;
+  if(outText && !outText.includes('Hasil terjemahan') && !outText.includes('Gagal') && !outText.includes('Koneksi')){
+    inputEl.value = outText;
+  }
+  setLabels(); updateCount(); translate();
+});
+document.getElementById('copyBtn').addEventListener('click', async () => {
+  const txt = outputEl.textContent;
+  if(!txt || txt.includes('Hasil terjemahan')) return;
+  try{ await navigator.clipboard.writeText(txt); statusEl.textContent = 'Disalin! ✓'; }
+  catch(e){ statusEl.textContent = 'Gagal menyalin'; }
+});
+document.getElementById('clearBtn').addEventListener('click', () => {
+  inputEl.value = ''; outputEl.innerHTML = '<span class="result-empty">Hasil terjemahan akan muncul di sini...</span>';
+  pinyinEl.textContent = 'Pinyin akan muncul di sini...'; lastChineseText='';
+  statusEl.textContent=''; updateCount(); inputEl.focus();
+});
+document.getElementById('toneMarkBtn').addEventListener('click', (e) => {
+  toneMode = 'mark';
+  document.getElementById('toneMarkBtn').classList.add('active');
+  document.getElementById('toneNoneBtn').classList.remove('active');
+  updatePinyin(lastChineseText);
+});
+document.getElementById('toneNoneBtn').addEventListener('click', () => {
+  toneMode = 'none';
+  document.getElementById('toneNoneBtn').classList.add('active');
+  document.getElementById('toneMarkBtn').classList.remove('active');
+  updatePinyin(lastChineseText);
+});
+document.getElementById('copyPinyinBtn').addEventListener('click', async () => {
+  const txt = pinyinEl.textContent;
+  if(!txt || txt.includes('Pinyin akan') || txt === '—') return;
+  try{ await navigator.clipboard.writeText(txt); statusEl.textContent = 'Pinyin disalin! ✓'; }
+  catch(e){ statusEl.textContent = 'Gagal menyalin pinyin'; }
+});
+document.getElementById('speakBtn').addEventListener('click', () => {
+  const txt = outputEl.textContent;
+  if(!txt || txt.includes('Hasil terjemahan')) { statusEl.textContent='Tidak ada hasil untuk dibacakan'; return; }
+  const u = new SpeechSynthesisUtterance(txt);
+  u.lang = toLang === 'zh-CN' ? 'zh-CN' : 'id-ID';
+  u.rate = 0.9;
+  window.speechSynthesis.speak(u);
+});
+inputEl.addEventListener('keydown', (e)=>{ if(e.key==='Enter' && e.ctrlKey) translate(); });
+setLabels();
+</script>
+</body>
+</html>
